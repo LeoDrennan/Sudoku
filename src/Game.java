@@ -1,6 +1,11 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.*;
+
 public class Game {
 
     public int[][] board;
+    private static final ExecutorService executor = Executors.newCachedThreadPool();
 
     public Game(int[][] board) {
         this.board = board;
@@ -19,61 +24,21 @@ public class Game {
         }
     }
 
-    public boolean Validate(){
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                if (board[i][j] != 0){
-                    boolean valid = CheckCell(board[i][j], i, j);
-                    if (!valid) {
-                        return false;
-                    }
-                }
+    public boolean Validate() {
+        List<Callable<Boolean>> tasks = new ArrayList<>();
+        try {
+            for (int i = 0; i < 9; i++) {
+                tasks.add(new RowValidator(board, i));
             }
-        }
-        return true;
-    }
-
-    private boolean CheckCell(int number, int x, int y) {
-
-        boolean row = CheckRow(number, x, y);
-        boolean column = CheckColumn(number, x, y);
-        boolean square = CheckSquare(number, x, y);
-
-        return row && column && square;
-    }
-
-    private boolean CheckRow(int number, int x, int y){
-        for (int i = 0; i < y; i++) {
-            if (board[x][i] == number){
-                return false;
+            List<Future<Boolean>> results = executor.invokeAll(tasks);
+            for (Future<Boolean> result : results) {
+                if (!result.get()) return false;
             }
+            return true;
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        } finally {
+            executor.shutdown();
         }
-        return true;
-    }
-
-    private boolean CheckColumn(int number, int x, int y){
-        for (int i = 0; i < x; i++) {
-            if (board[i][y] == number){
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean CheckSquare(int number, int x, int y) {
-        int squareX = x - (x % 3);
-        int squareY = y - (y % 3);
-
-        for (int i = squareX; i < squareX + 3; i++) {
-            for (int j = squareY; j < squareY + 3; j++) {
-                if (board[i][j] == number ) {
-                    if (i == x && j == y){
-                        continue;
-                    }
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 }

@@ -25,7 +25,7 @@ public class SudokuSolver {
 
         long endTime = System.nanoTime();
 
-        double duration = (endTime - startTime) / 1000000.00;  //divide by 1000000 to get milliseconds.
+        double duration = (endTime - startTime) / 1000000.00;
 
         System.out.println(duration);
     }
