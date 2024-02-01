@@ -4,7 +4,7 @@ import java.util.concurrent.*;
 
 public class Game {
 
-    public int[][] board;
+    private final int[][] board;
     private static final ExecutorService executor = Executors.newCachedThreadPool();
 
     public Game(int[][] board) {
@@ -35,9 +35,13 @@ public class Game {
                 if (!result.get()) return false;
             }
             return true;
-        } catch (InterruptedException | ExecutionException e) {
+        }
+        catch (InterruptedException | ExecutionException e)
+        {
             throw new RuntimeException(e);
-        } finally {
+        }
+        finally
+        {
             executor.shutdown();
         }
     }

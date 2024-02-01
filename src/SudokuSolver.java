@@ -27,6 +27,6 @@ public class SudokuSolver {
 
         double duration = (endTime - startTime) / 1000000.00;
 
-        System.out.println(duration);
+        System.out.println(duration + " ms");
     }
 }

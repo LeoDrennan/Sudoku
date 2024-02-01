@@ -2,8 +2,8 @@ import java.util.concurrent.Callable;
 
 public class RowValidator implements Callable<Boolean> {
 
-    public int[][] board;
-    public int row;
+    private final int[][] board;
+    private final int row;
 
     public RowValidator(int[][] board, int row) {
         this.board = board;
@@ -12,11 +12,6 @@ public class RowValidator implements Callable<Boolean> {
 
     @Override
     public Boolean call() {
-        return ValidateRow();
-    }
-
-    private Boolean ValidateRow(){
-
         for (int i = 0; i < 9; i++) {
             if (board[row][i] != 0) {
                 boolean valid = ValidateCell(board[row][i], i);
