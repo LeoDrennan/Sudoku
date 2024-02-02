@@ -1,30 +1,12 @@
-import java.util.concurrent.Callable;
+package Validation;
 
-public class RowValidator implements Callable<Boolean> {
+public class Validator {
+    protected int[][] board;
 
-    private final int[][] board;
-    private final int row;
-
-    public RowValidator(int[][] board, int row) {
-        this.board = board;
-        this.row = row;
-    }
-
-    @Override
-    public Boolean call() {
-        for (int i = 0; i < 9; i++) {
-            if (board[row][i] != 0) {
-                boolean valid = ValidateCell(board[row][i], i);
-                if (!valid) return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean ValidateCell(int number, int column) {
-        boolean validRow = CheckRow(number, row, column);
-        boolean validColumn = CheckColumn(number, row, column);
-        boolean validSquare = CheckSquare(number, row, column);
+    protected boolean ValidateCell(int number, int x, int y) {
+        boolean validRow = CheckRow(number, x, y);
+        boolean validColumn = CheckColumn(number, x, y);
+        boolean validSquare = CheckSquare(number, x, y);
 
         return validRow && validColumn && validSquare;
     }
@@ -63,8 +45,4 @@ public class RowValidator implements Callable<Boolean> {
         }
         return true;
     }
-
-
-
 }
-

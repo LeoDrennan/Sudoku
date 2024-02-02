@@ -1,10 +1,10 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
+import Validation.*;
 
-public class Game {
+public class Game extends Validator {
 
-    private final int[][] board;
     private static final ExecutorService executor = Executors.newCachedThreadPool();
 
     public Game(int[][] board) {
@@ -22,6 +22,7 @@ public class Game {
             }
             System.out.print("\n");
         }
+        System.out.print("\n");
     }
 
     public boolean Validate() {
@@ -44,5 +45,25 @@ public class Game {
         {
             executor.shutdown();
         }
+    }
+
+    public boolean Solve() {
+        for (int row = 0; row < 9; row++) {
+            for (int column = 0; column < 9; column++) {
+                if (board[row][column] == 0){
+                    for (int num = 1; num <= 9; num++) {
+                        if (ValidateCell(num, row , column)){
+                            board[row][column] = num;
+                            if (Solve()) return true;
+                        }
+                        else {
+                            board[row][column] = 0;
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

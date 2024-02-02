@@ -1,8 +1,28 @@
 public class SudokuSolver {
     public static void main(String[] args) {
 
-        long startTime = System.nanoTime();
+        Game board = initializeGame();
 
+        boolean isValid = board.Validate();
+
+        if (!isValid) {
+            System.out.println("Invalid board provided.");
+        }
+        else {
+            boolean solved = board.Solve();
+            if (solved) {
+                System.out.println("Your solution is:");
+                System.out.print("\n");
+                board.Show();
+            }
+            else
+            {
+                System.out.println("Board could not be solved.");
+            }
+        }
+    }
+
+    private static Game initializeGame() {
         int[][] board = new int[][]{
                 {8, 0, 0, 0, 0, 0, 0, 0, 0},
                 {0, 0, 3, 6, 0, 0, 0, 0, 0},
@@ -17,16 +37,11 @@ public class SudokuSolver {
 
         Game game = new Game(board);
 
+        System.out.println("Starting board:");
+        System.out.print("\n");
+
         game.Show();
 
-        boolean valid = game.Validate();
-
-        System.out.println(valid);
-
-        long endTime = System.nanoTime();
-
-        double duration = (endTime - startTime) / 1000000.00;
-
-        System.out.println(duration + " ms");
+        return game;
     }
 }
