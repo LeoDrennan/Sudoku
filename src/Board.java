@@ -48,7 +48,7 @@ public class Board extends Validator {
     }
 
     public void Optimise() {
-        ArrayList<Integer> possible = new ArrayList<Integer>();
+        ArrayList<Integer> possible = new ArrayList<>();
 
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {

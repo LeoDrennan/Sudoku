@@ -5,6 +5,8 @@ public class SudokuSolver {
 
         long startTime = System.nanoTime();
 
+        board.Validate();
+
         board.Optimise();
 
         board.Solve();
