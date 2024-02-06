@@ -3,21 +3,25 @@ public class SudokuSolver {
 
         Board board = initializeBoard();
 
-        long startTime = System.nanoTime();
+        boolean isValid = board.Validate();
 
-        board.Validate();
+        if (!isValid) {
+            System.out.println("Input board is invalid.");
+        }
+        else
+        {
+            board.Optimise();
 
-        board.Optimise();
-
-        board.Solve();
-
-        board.Show();
-
-        long endTime = System.nanoTime();
-
-        double duration = (endTime - startTime) / 1000000.0;
-
-        System.out.println(duration);
+            boolean isSolved = board.Solve();
+            if (!isSolved) {
+                System.out.println("Board could not be solved.");
+            }
+            else {
+                System.out.println("Solved board:");
+                System.out.println();
+                board.Show();
+            }
+        }
     }
 
     private static Board initializeBoard() {
