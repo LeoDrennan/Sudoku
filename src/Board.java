@@ -3,11 +3,11 @@ import java.util.List;
 import java.util.concurrent.*;
 import Validation.*;
 
-public class Game extends Validator {
+public class Board extends Validator {
 
     private static final ExecutorService executor = Executors.newCachedThreadPool();
 
-    public Game(int[][] board) {
+    public Board(int[][] board) {
         this.board = board;
     }
 
@@ -47,6 +47,27 @@ public class Game extends Validator {
         }
     }
 
+    public void Optimise() {
+        ArrayList<Integer> possible = new ArrayList<Integer>();
+
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (board[i][j] == 0) {
+                    for (int k = 1; k <= 9; k++) {
+                        if (ValidateCell(k, i, j)) {
+                            possible.add(k);
+                        }
+                    }
+                    if (possible.size() == 1) {
+                        board[i][j] = possible.getFirst();
+                        Optimise();
+                    }
+                    possible.clear();
+                }
+            }
+        }
+    }
+
     public boolean Solve() {
         for (int row = 0; row < 9; row++) {
             for (int column = 0; column < 9; column++) {
@@ -55,9 +76,9 @@ public class Game extends Validator {
                         if (ValidateCell(num, row , column)){
                             board[row][column] = num;
                             if (Solve()) return true;
-                        }
-                        else {
-                            board[row][column] = 0;
+                            else {
+                                board[row][column] = 0;
+                            }
                         }
                     }
                     return false;
@@ -66,4 +87,6 @@ public class Game extends Validator {
         }
         return true;
     }
+
+
 }
