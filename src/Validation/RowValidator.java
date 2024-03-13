@@ -15,7 +15,7 @@ public class RowValidator extends Validator implements Callable<Boolean> {
     public Boolean call() {
         for (int i = 0; i < 9; i++) {
             if (board[row][i] != 0) {
-                boolean valid = ValidateCell(board[row][i], row, i);
+                boolean valid = validateCell(board[row][i], row, i);
                 if (!valid) return false;
             }
         }

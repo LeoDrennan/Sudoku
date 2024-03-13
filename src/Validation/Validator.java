@@ -1,17 +1,17 @@
 package Validation;
 
 public class Validator {
-    protected int[][] board;
+    public int[][] board;
 
-    protected boolean ValidateCell(int number, int x, int y) {
-        boolean validRow = CheckRow(number, x, y);
-        boolean validColumn = CheckColumn(number, x, y);
-        boolean validSquare = CheckSquare(number, x, y);
+    public boolean validateCell(int number, int x, int y) {
+        boolean validRow = checkRow(number, x, y);
+        boolean validColumn = checkColumn(number, x, y);
+        boolean validSquare = checkSquare(number, x, y);
 
         return validRow && validColumn && validSquare;
     }
 
-    private boolean CheckRow(int number, int x, int y){
+    private boolean checkRow(int number, int x, int y) {
         for (int i = 0; i < 9; i++) {
             if (board[x][i] == number && i != y) {
                 return false;
@@ -20,7 +20,7 @@ public class Validator {
         return true;
     }
 
-    private boolean CheckColumn(int number, int x, int y){
+    private boolean checkColumn(int number, int x, int y) {
         for (int i = 0; i < 9; i++) {
             if (board[i][y] == number && i != x) {
                 return false;
@@ -29,7 +29,7 @@ public class Validator {
         return true;
     }
 
-    private boolean CheckSquare(int number, int x, int y) {
+    private boolean checkSquare(int number, int x, int y) {
         int squareX = x - (x % 3);
         int squareY = y - (y % 3);
 
