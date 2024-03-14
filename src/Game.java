@@ -29,6 +29,20 @@ public class Game {
         System.out.print("\n");
     }
 
+    public void solution() {
+        for (int[] row : solution) {
+            for (int cell : row) {
+                if (cell == 0) {
+                    System.out.print(". ");
+                } else {
+                    System.out.print(cell + " ");
+                }
+            }
+            System.out.print("\n");
+        }
+        System.out.print("\n");
+    }
+
     // Validates that a board does not violate the laws of sudoku
     public boolean validate() {
         List<Callable<Boolean>> tasks = new ArrayList<>();
@@ -100,7 +114,12 @@ public class Game {
     // Generate a random sudoku
     private void generate() {
         // Fills three 3x3 squares diagonally
-        validator.board = generator.generateDiagonals();
+        try {
+            validator.board = generator.generateDiagonals();
+        } catch (InterruptedException exception) {
+            throw new RuntimeException();
+        }
+
 
         // Fill remaining cells
         boolean isSolved = solve();

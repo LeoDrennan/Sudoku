@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class SudokuEngine {
@@ -15,13 +14,7 @@ public class SudokuEngine {
             System.out.println("Error.");
         }
 
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Type solve to see the solution.");
-
-        String command = scan.nextLine();
-        if (command.equals("solve")) {
-            System.out.println(Arrays.deepToString(game.solution));
-        }
+        printSolution(game);
     }
 
     private static void displayUnsolved(Game game) {
@@ -29,5 +22,15 @@ public class SudokuEngine {
         System.out.print("\n");
 
         game.show();
+    }
+
+    private static void printSolution(Game game) {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Type solve to see the solution.");
+
+        String command = scan.nextLine();
+        if (command.equals("solve")) {
+            game.solution();
+        }
     }
 }

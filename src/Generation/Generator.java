@@ -2,17 +2,28 @@ package Generation;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class Generator {
     public int[][] board = new int[9][9];
-    private static final ExecutorService executor = Executors.newCachedThreadPool();
+    private static  ExecutorService executor = Executors.newCachedThreadPool();
 
     // Populates the top left, middle, and bottom right squares
     // These squares are independent of each other and can be naively filled
-    public int[][] generateDiagonals() {
+    public int[][] generateDiagonals() throws InterruptedException {
 
-        for (int i = 0; i < 9;  i = i + 3) {
-            executor.execute(new PopulateSquare(i, i, board));
+        // Create new executor if previous has been shutdown
+        if (executor.isShutdown()) {
+            executor = Executors.newCachedThreadPool();
+        }
+
+        try {
+            for (int i = 0; i < 9;  i = i + 3) {
+                executor.execute(new PopulateSquare(i, i, board));
+            }
+        } finally {
+            executor.shutdown();
+            executor.awaitTermination(1, TimeUnit.MINUTES);
         }
 
         return this.board;

@@ -25,6 +25,11 @@ public class PopulateSquare implements Runnable {
                     num = generateNum();
                 }
                 while (!validateSquare(row, col, num));
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
 
                 synchronized (board) {
                     board[row + i][col + j] = num;
