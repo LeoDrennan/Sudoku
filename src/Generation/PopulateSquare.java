@@ -1,5 +1,8 @@
 package Generation;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class PopulateSquare implements Runnable {
 
     private final int row;
@@ -15,22 +18,13 @@ public class PopulateSquare implements Runnable {
     // Fills a 3x3 square with numbers 1-9 randomly
     @Override
     public void run() {
-        int num;
+        ArrayList<Integer> nums = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9));
+
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 3; j++)
             {
-                do
-                {
-                    num = generateNum();
-                }
-                while (!validateSquare(row, col, num));
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-
+                int num = generateNum(nums);
                 synchronized (board) {
                     board[row + i][col + j] = num;
                 }
@@ -38,18 +32,12 @@ public class PopulateSquare implements Runnable {
         }
     }
 
-    // Generates random number between 1-9 inclusive
-    private int generateNum() {
-        return (int) Math.floor((Math.random() * 9 + 1));
-    }
+    // Randomly chooses a number from the given ArrayList
+    private int generateNum(ArrayList<Integer> nums) {
+        int index = (int) Math.floor((Math.random() * nums.size()));
+        int num = nums.get(index);
+        nums.remove(index);
 
-    // Returns false if given 3x3 square contains given number
-    private boolean validateSquare(int rowStart, int colStart, int num) {
-        for (int i = 0; i < 3; i++)
-            for (int j = 0; j < 3; j++)
-                if (board[rowStart + i][colStart + j] == num)
-                    return false;
-
-        return true;
+        return num;
     }
 }

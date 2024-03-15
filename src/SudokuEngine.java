@@ -14,23 +14,23 @@ public class SudokuEngine {
             System.out.println("Error.");
         }
 
-        printSolution(game);
+        getUserInput(game);
     }
 
     private static void displayUnsolved(Game game) {
         System.out.println("Starting board:");
         System.out.print("\n");
 
-        game.show();
+        game.printUnsolved();
     }
 
-    private static void printSolution(Game game) {
+    private static void getUserInput(Game game) {
         Scanner scan = new Scanner(System.in);
         System.out.println("Type solve to see the solution.");
 
         String command = scan.nextLine();
         if (command.equals("solve")) {
-            game.solution();
+            game.printSolution();
         }
     }
 }

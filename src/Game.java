@@ -15,54 +15,34 @@ public class Game {
         generate();
     }
 
-    public void show() {
-        for (int[] row : validator.board) {
-            for (int cell : row) {
-                if (cell == 0) {
-                    System.out.print(". ");
-                } else {
-                    System.out.print(cell + " ");
-                }
-            }
-            System.out.print("\n");
-        }
-        System.out.print("\n");
+    public void printUnsolved() {
+        printBoard(validator.board);
     }
 
-    public void solution() {
-        for (int[] row : solution) {
-            for (int cell : row) {
-                if (cell == 0) {
-                    System.out.print(". ");
-                } else {
-                    System.out.print(cell + " ");
-                }
-            }
-            System.out.print("\n");
-        }
-        System.out.print("\n");
+    public void printSolution() {
+        printBoard(solution);
     }
 
-    // Validates that a board does not violate the laws of sudoku
-    public boolean validate() {
-        List<Callable<Boolean>> tasks = new ArrayList<>();
+    // Generate a random sudoku
+    private void generate() {
+        // Fills three 3x3 squares diagonally with random seed
         try {
-            for (int i = 0; i < 9; i++) {
-                tasks.add(new RowValidator(validator.board, i));
-            }
-            List<Future<Boolean>> results = executor.invokeAll(tasks);
-            for (Future<Boolean> result : results) {
-                if (!result.get()) return false;
-            }
-            return true;
+            validator.board = generator.generateDiagonals();
+        } catch (InterruptedException exception) {
+            throw new RuntimeException();
         }
-        catch (InterruptedException | ExecutionException e)
-        {
-            throw new RuntimeException(e);
-        }
-        finally
-        {
-            executor.shutdown();
+
+        // Attempts to fill remaining cells
+        boolean isSolved = solve();
+
+        // If the randomly generated puzzle is not possible, start again
+        if (!isSolved){
+            generator.board = new int[9][9];
+            generate();
+        } else {
+            this.solution = saveSolution();
+            generator.removeNumbers();
+            validator.board = generator.board;
         }
     }
 
@@ -111,27 +91,26 @@ public class Game {
         }
     }
 
-    // Generate a random sudoku
-    private void generate() {
-        // Fills three 3x3 squares diagonally
+    // Validates that a board does not violate the laws of sudoku
+    public boolean validate() {
+        List<Callable<Boolean>> tasks = new ArrayList<>();
         try {
-            validator.board = generator.generateDiagonals();
-        } catch (InterruptedException exception) {
-            throw new RuntimeException();
+            for (int i = 0; i < 9; i++) {
+                tasks.add(new RowValidator(validator.board, i));
+            }
+            List<Future<Boolean>> results = executor.invokeAll(tasks);
+            for (Future<Boolean> result : results) {
+                if (!result.get()) return false;
+            }
+            return true;
         }
-
-
-        // Fill remaining cells
-        boolean isSolved = solve();
-
-        // If the randomly generated puzzle is not possible, start again
-        if (!isSolved){
-            generator.board = new int[9][9];
-            generate();
-        } else {
-            this.solution = saveSolution();
-            generator.removeNumbers();
-            validator.board = generator.board;
+        catch (InterruptedException | ExecutionException e)
+        {
+            throw new RuntimeException(e);
+        }
+        finally
+        {
+            executor.shutdown();
         }
     }
 
@@ -144,5 +123,19 @@ public class Game {
         }
 
         return newArray;
+    }
+
+    private void printBoard(int[][] board) {
+        for (int[] row : board) {
+            for (int cell : row) {
+                if (cell == 0) {
+                    System.out.print(". ");
+                } else {
+                    System.out.print(cell + " ");
+                }
+            }
+            System.out.print("\n");
+        }
+        System.out.print("\n");
     }
 }
